@@ -160,6 +160,6 @@ int main() {
    sinhvien newSV;
     nhapThongTin(newSV);
     chen(L, newSV);
-    xuat
+    xuat(L);
     return 0;
 }
