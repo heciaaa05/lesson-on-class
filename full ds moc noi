@@ -34,7 +34,7 @@ void nhapThongTin(sinhvien &sv) {
     cin >> sv.diemTB;
 }
 
-// nhap
+// nhap ds
 void nhapDS(TRO &L) {
     sinhvien x;
     TRO Q = NULL, P;
@@ -60,7 +60,7 @@ void nhapDS(TRO &L) {
     }
 }
 
-// xuat
+// xuat ds
 void xuat(TRO L) {
     cout << left << setw(10) << "Ma SV"
          << setw(25) << "Ho ten"
