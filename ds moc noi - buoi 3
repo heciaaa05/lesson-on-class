@@ -80,7 +80,7 @@ void xuat(TRO L) {
 
 //count list
 
-int countList(TRO &L){
+int countList(TRO L){
     TRO Q = L;
     int dem=0;
     while ( Q != NULL){
@@ -94,25 +94,24 @@ int countList(TRO &L){
 
 //tinh diem trung binh
 
-float diemTB(TRO &L){
+float diemTB(TRO L){
     TRO Q = L;
-    float T=0;
+    float T=0.0;
     int dem=0;
     while (Q!= NULL){
-        T += Q->infor.diemTB;
+        T = T + Q->infor.diemTB;
         dem++;
-        Q=Q->next;
+        Q = Q->next;
     }
-    if (dem = 0) return 0.0;
-    float TB = T/dem;
-    return TB;
+    if (dem ==0) return 0.0;
+    return T/dem;
 
 }
 
 // sap xep danh sach theo diem trung binh (bubleSort)
 void listSort(TRO &L){
   bool swapped;
-  TRO P,Q;
+  TRO P,Q= NULL;
   do{
     swapped = false;
     P = L;
@@ -130,6 +129,8 @@ void listSort(TRO &L){
     Q=P;
   }  while (swapped);
 }
+
+
 int main(){
     TRO L = NULL;
     TRO Q;
@@ -148,5 +149,4 @@ int main(){
     //sap xep ds
     listSort(L);
     xuat(L);
-
 }
