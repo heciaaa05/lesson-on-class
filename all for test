@@ -1,0 +1,358 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+struct sinhvien {
+    char masv[10];
+    char hoten[30];
+    char diachi[20];
+    float diemTB;
+};
+
+
+struct Node {
+    sinhvien infor;
+    Node* next;
+};
+
+typedef Node* TRO;
+
+//nhap 1 sv
+void nhapThongTin(sinhvien &sv) {
+    cout << "Nhap ma sv: ";
+    cin.ignore();
+    cin.getline(sv.masv, 10);
+
+    cout << "Nhap ho ten: ";
+    cin.getline(sv.hoten, 30);
+
+    cout << "Nhap dia chi: ";
+    cin.getline(sv.diachi, 20);
+
+    cout << "Nhap diem TB: ";
+    cin >> sv.diemTB;
+}
+
+// nhap ds
+void nhapDS(TRO &L) {
+    sinhvien x;
+    TRO Q = NULL, P;
+    int n;
+
+    cout << "Nhap so luong sinh vien: ";
+    cin >> n;
+
+    for (int i = 0; i < n; ++i) {
+        cout << "\nNhap sinh vien thu " << i + 1 << ":\n";
+        nhapThongTin(x);
+
+        P = new Node;
+        P->infor = x;
+        P->next = NULL;
+
+        if (L == NULL) {
+            L = P;
+        } else {
+            Q->next = P;
+        }
+        Q = P;
+    }
+}
+
+// xuat ds
+void xuat(TRO L) {
+    cout << left << setw(10) << "Ma SV"
+         << setw(25) << "Ho ten"
+         << setw(20) << "Dia chi"
+         << setw(10) << "Diem TB" << endl;
+
+    TRO Q = L;
+    while (Q != NULL) {
+        sinhvien x = Q->infor;
+        cout << left << setw(10) << x.masv
+             << setw(25) << x.hoten
+             << setw(20) << x.diachi
+             << setw(10) << fixed << setprecision(2) << x.diemTB << endl;
+        Q = Q->next;
+    }
+}
+
+//count sv ten "lan"
+int countList(TRO L){
+    TRO Q = L;
+    int dem=0;
+    while ( Q != NULL){
+        if (strcmp(Q->infor.hoten, "lan")==0){
+            dem++;
+        }
+        Q=Q->next;
+    }
+    return dem;
+}
+
+//tinh diem trung binh
+
+float diemTB(TRO L){
+    TRO Q = L;
+    float T=0.0;
+    int dem=0;
+    while (Q!= NULL){
+        T = T + Q->infor.diemTB;
+        dem++;
+        Q = Q->next;
+    }
+    if (dem ==0) return 0.0;
+    return T/dem;
+
+}
+
+// sap xep danh sach theo diem trung binh (bubleSort)
+void listSort(TRO &L){
+  bool swapped;
+  TRO P,Q= NULL;
+  do{
+    swapped = false;
+    P = L;
+    while (P->next != Q){
+        //ktra dkien swap
+        if (P->infor.diemTB > P->next->infor.diemTB){
+            //swap
+            sinhvien temp = P->infor;
+            P->infor = P->next->infor;
+            P->next->infor = temp;
+            swapped = true;
+        }
+        P= P->next;
+    }
+    Q=P;
+  }  while (swapped);
+}
+
+
+///sap xep (insertSort)
+void insertSort(TRO &L){
+	TRO Q = L;
+	TRO sorted = NULL;// neu ds da sap xep
+	while (Q != NULL){
+		TRO next = Q->next; //luu node tiep theo
+		//nếu sorted rỗng hoặc Q->infor.diemTB nhỏ hơn sorted 
+		if (sorted == NULL || Q->infor.diemTB < sorted->infor.diemTb){
+			Q->next = sorted;
+			sorted = Q;
+		}else {
+			TRO temp = sorted;
+			// tìm vtri để chèn Q
+			while (temp->next != NULL && temp-next->infor.diemTB < Q->infor.diemTB){
+			temp = temp->next;
+			}
+		Q->next=temp->next;
+		temp->next = Q;
+		}
+	Q= next;
+	}
+	L= sorted;
+}
+
+
+//sap xep(selectionSort)
+void selectionSort(TRO &L){
+	for (TRO Q=L; Q!=NULL; Q=Q->next){
+	TRO minNode = Q;
+	for (TRO P = Q->next; P!=NULL, P=P->next){
+		if (P->infor.diemTB<minNode->infor.diemTB)
+			minNode = P;
+		}
+	}
+	//swap
+	if (minNode != NULL){
+		SinhVien temp = Q->infor;
+		Q->infor = minNode->infor;
+		minNode->infor=temp;
+	}
+   }	
+}
+
+//chen vao vtri thu n
+void chenN(TRO L, sinhvien newSV){
+int n;
+  cout<<"nhap vi tri can chen";
+  cin>>n;
+	nhapThongTin(newSV);
+	TRO P = new Node;
+	P->infor = newSV;
+	P->next = NULL;
+	//neu la ptu dau
+  if (n<=1 || L==NULL){
+    P->next =L;
+    L=P;
+  return;
+}
+	TRO Q=L;
+	for (int i=1; i<n-1 && Q->next != NULL; i++)
+		Q=Q->next;
+	//chen sau Q
+	P->next = Q->next;
+	Q->next = P;
+}
+
+//xoa cac ptu co diemTB lon nhat
+void xoaMax(TRO &L){
+	float maxdiemTB = L->infor.diemTB;
+	TRO Q = L;
+	while (Q != NULL){
+		if (Q->infor.diemTB > maxdiemTB)
+			maxdiemTB = Q->infor.diemTB;
+		Q=Q->next;
+	} 
+	//xoa
+	TRO P=L, prev = NULL;
+	while (P!= NULL){
+		if (P->infor.diemTB==maxdiemTB){
+			if (prev == NULL){//neu la ptu dau tien
+				L = P->next;
+				delete P;
+				P=L;
+		} else {//neu la ptu tu 2 tro di
+			prev->next = P->next;
+			delete P;
+			P= prev->next;
+		}
+	}	else {
+		prev =P;
+		P=P->next;
+		}
+	}
+}
+
+
+//tim tro tro den max diemTB
+ TRO max1(TRO L) {
+    if (L == NULL) return NULL;
+
+    TRO maxSV = L;
+    TRO Q = L;
+
+    // Duyệt
+    while (Q != NULL) {
+        if (Q->infor.diemTB > maxSV->infor.diemTB) {
+            maxSV = Q;
+        }
+        Q = Q->next;
+    }
+
+    return maxSV;
+}
+
+//xoa max
+void deleteMax(TRO &L) {
+
+    TRO maxSV = max1(L);
+    if (maxSV == NULL) return; // trường hợp ds rỗng
+    TRO P = NULL, Q = L;
+
+    //neu la sv dau tien
+    if (maxSV == L) {
+        L = L->next;  //update list
+        delete maxSV;  // delete first node
+        return;
+    }
+
+    //truong hop con lai
+    while (Q != NULL && Q != maxSV) {
+        P = Q;
+        Q = Q->next;
+    }
+    if (Q == maxSV) {
+        P->next = Q->next;
+        delete maxSV;
+    }
+}
+
+//chen ptu truoc max
+void chen(TRO &L, sinhvien newSV){
+    TRO maxSV = max1(L);
+    TRO P = new Node;
+    P->infor = newSV;
+    P->next = NULL;
+
+    TRO Q = NULL;
+    while (L != maxSV){
+        Q=L;
+        L=L->next;
+    }
+    if (Q != NULL){
+        Q->next=P;
+        P->next=maxSV;
+    }
+}
+
+
+//xoa sv ten An
+void xoaAn(TRO &L){
+	TRO P=L; TRO prev= NULL;
+	while (P != NULL){
+		if (strcmp(P->infor.hoten, "an")==0){
+			if (prev == NULL){//neu o dau ds
+				L = P->next;
+				delete P;
+				P=L;
+			} else {//tu ptu thu 2
+				prev->next = P->next;
+				delete P;
+				P = prev->next;
+			}
+	} else {
+		prev = P;
+		P = P->next;
+	}
+ }
+}
+
+
+//thong ke cac sinh vien co diem tb>7
+void thongKe(TRO &L){
+	cout<<"cac sinh vien co diemTB>7: ";
+	TRO P=L;
+	bool coSinhVien = false;//bienktra
+	while (P != NULL){
+		if (P->infor.diemTB>7){
+			if (coSinhVien) cout<<", ";//them ", "
+			cout<<P->infor.hoten;
+			coSinhVien=true;
+		} P = P->next;
+	} if(!coSinhVien) cout<<"khong co sinh vien nao!!";
+	cout<<endl;
+}
+
+//xoa cac ptu co diemTB nho nhat
+void xoaMin(TRO &L){
+	float mindiemTB = L->infor.diemTB;
+	TRO Q = L;
+	while (Q != NULL){
+		if (Q->infor.diemTB < mindiemTB)
+			mindiemTB = Q->infor.diemTB;
+		Q=Q->next;
+	} 
+	//xoa
+	TRO P=L, prev = NULL;
+	while (P!= NULL){
+		if (P->infor.diemTB==mindiemTB){
+			if (prev == NULL){//neu la ptu dau tien
+				L = P->next;
+				delete P;
+				P=L;
+		} else {//neu la ptu tu 2 tro di
+			prev->next = P->next;
+			delete P;
+			P= prev->next;
+		}
+	}	else {
+		prev =P;
+		P=P->next;
+		}
+	}
+}
+
+int main(){
+}
