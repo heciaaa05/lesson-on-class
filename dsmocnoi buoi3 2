@@ -78,7 +78,7 @@ void xuat(TRO L) {
     }
 }
 
-//count list
+//count sv ten "lan"
 
 int countList(TRO L){
     TRO Q = L;
@@ -129,6 +129,45 @@ void listSort(TRO &L){
     Q=P;
   }  while (swapped);
 }
+///sap xep (insertSort)
+void insertSort(TRO &l){
+	TRO Q = L;
+	TRO sorted = NULL;// neu ds da sap xep
+	while (Q != NULL){
+		TRO next = Q->next; //luu node tiep theo
+		//nếu sorted rỗng hoặc Q->infor.diemTB nhỏ hơn sorted 
+		if (sorted == NULL || Q->infor.diemTB < sorted->infor.diemTb){
+			Q->next = sorted;
+			sorted = Q;
+		}else {
+			TRO temp = sorted;
+			// tìm vtri để chèn Q
+			while (temp->next != NULL && temp-next->infor.diemTB < Q->infor.diemTB){
+			temp = temp->next;
+			}
+		Q->next=temp->next;
+		temp->next = Q;
+		}
+	Q= next;
+	}
+	L= sorted;
+}//sap xep(selectionSort)
+void selectionSort(TRO &L){
+	for (TRO Q=L, Q!=NULL, Q=Q->next){
+	TRO minNode = Q;
+	for (TRO P = Q->next; P!=NULL, P=P->next){
+		if (P->infor.diemTB<minNode->infor.diemTB)
+			mineNode = P;
+		}
+	}
+	//swap
+	if (minNode != NULL){
+		SinhVien temp = Q->infor;
+		Q->infor = minNode->infor;
+		minNode->infor=temp;
+	}
+   }	
+}
 
 //chen vao vtri thu 4
 void chen4(TRO L, sinhvien newSV){
@@ -143,7 +182,7 @@ void chen4(TRO L, sinhvien newSV){
 	//chen
 	P->next = Q->next;
 	Q->next = P;
-}
+}}
 
 //xoa cac ptu co diemTB lon nhat
 void xoaMax(TRO &L){
